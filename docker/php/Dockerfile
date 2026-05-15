@@ -15,7 +15,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     libcurl4-openssl-dev \
     zlib1g-dev \
     libc6-dev \
+    libsqlcipher-dev \
+    pkg-config \
     && apt-get clean
+
+# 2. Включаем флаг шифрования для компилятора C
+ENV CFLAGS="-DSQLITE_HAS_CODEC"
 
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
@@ -25,7 +30,7 @@ RUN install-php-extensions \
     zip \
     curl \
     json \
-    pdo_mysql \
+    pdo_sqlite \
     sqlite3
 
 RUN pecl install xmlrpc-1.0.0 || true
